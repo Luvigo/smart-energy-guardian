@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Optional
 
 import serial
+from serial import SerialException
 from serial.tools import list_ports
 
 DEFAULT_BAUD_RATE = 9600
