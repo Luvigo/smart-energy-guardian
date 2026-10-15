@@ -30,7 +30,7 @@ export function cardboardWallMaterial() {
   const map = canvasTex((ctx, w, h) => {
     ctx.fillStyle = "#e7d3b4";
     ctx.fillRect(0, 0, w, h);
-    for (let i = 0; i < 2200; i++) {
+    for (let i = 0; i < 1400; i++) {
       const v = Math.floor(Math.random() * 28) - 12;
       ctx.fillStyle = `rgba(${210 + v}, ${188 + v}, ${150 + v}, 0.22)`;
       ctx.fillRect(Math.random() * w, Math.random() * h, 2 + Math.random() * 5, 1);
@@ -95,6 +95,26 @@ export function woodMaterial(tone = "mid") {
   return mat(map, 0.86);
 }
 
+/** Base laminada madera/cartón bajo el piso interior. */
+export function laminatedBaseMaterial() {
+  const map = canvasTex((ctx, w, h) => {
+    ctx.fillStyle = "#6b4a2e";
+    ctx.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 6) {
+      ctx.fillStyle = y % 12 === 0 ? "#4a3220" : "#7a5638";
+      ctx.fillRect(0, y, w, 2);
+    }
+    ctx.globalAlpha = 0.12;
+    for (let i = 0; i < 600; i++) {
+      ctx.fillStyle = "#3d2818";
+      ctx.fillRect(Math.random() * w, Math.random() * h, 4, 1);
+    }
+    ctx.globalAlpha = 1;
+  });
+  map.repeat.set(2.5, 1.2);
+  return mat(map, 0.88);
+}
+
 /** Césped con variación verde leve. */
 export function grassMaterial() {
   const map = canvasTex((ctx, w, h) => {
@@ -108,6 +128,47 @@ export function grassMaterial() {
   });
   map.repeat.set(4, 3);
   return mat(map, 0.96);
+}
+
+/** Camino de piedra / losa gris. */
+export function pathStoneMaterial() {
+  const map = canvasTex((ctx, w, h) => {
+    ctx.fillStyle = "#8a8f94";
+    ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 120; i++) {
+      const x = Math.random() * w;
+      const y = Math.random() * h;
+      const s = 8 + Math.random() * 18;
+      ctx.fillStyle = `rgba(${110 + Math.random() * 30}, ${115 + Math.random() * 25}, ${120 + Math.random() * 20}, 0.55)`;
+      ctx.fillRect(x, y, s, s * 0.7);
+    }
+  });
+  map.repeat.set(2, 2);
+  return mat(map, 0.92);
+}
+
+/** Vidrio azul oscuro para ventana frontal (opaco en vista cerrada). */
+export function windowGlassMaterial() {
+  const map = canvasTex((ctx, w, h) => {
+    ctx.fillStyle = "#2a5f7a";
+    ctx.fillRect(0, 0, w, h);
+    const g = ctx.createLinearGradient(0, 0, w * 0.7, h);
+    g.addColorStop(0, "rgba(160,210,240,0.28)");
+    g.addColorStop(0.45, "rgba(255,255,255,0.04)");
+    g.addColorStop(1, "rgba(15,40,60,0.2)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+  }, 128, 128);
+  return new THREE.MeshStandardMaterial({
+    map,
+    color: 0x4a8cad,
+    roughness: 0.2,
+    metalness: 0.28,
+    transparent: false,
+    opacity: 1,
+    depthWrite: true,
+    side: THREE.FrontSide,
+  });
 }
 
 /** Vidrio azul opaco con un reflejo diagonal muy tenue. */
